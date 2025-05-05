@@ -1,0 +1,44 @@
+# Upload Excel sheet
+from google.colab import files
+uploaded = files.upload()
+
+# Import
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Read file
+path = 'Marks_secA.xlsx'
+df = pd.read_excel(path, header=None)
+
+# Select columns
+df_selected = df[[0, 1, 6]]
+df_selected.columns = ['ID', 'Student', 'MarksObtained']
+
+# Compute %
+df_selected['Percent'] = df_selected['MarksObtained'] * 100 / 15
+
+# Groups
+excellent = df_selected[df_selected['Percent'] > 75]
+average = df_selected[(df_selected['Percent'] >= 60) & (df_selected['Percent'] <= 75)]
+poor = df_selected[df_selected['Percent'] < 60]
+
+# Histogram
+plt.figure(figsize=(10, 6))
+plt.hist(df_selected['Percent'], bins=range(0, 101, 5), color='coral', edgecolor='black')
+plt.xlabel('Percentage')
+plt.ylabel('Students')
+plt.title('Student Marks Histogram')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Scatter
+plt.figure(figsize=(12, 6))
+plt.scatter(df_selected['Student'].astype(str), df_selected['Percent'], color='purple', edgecolors='black')
+plt.xlabel('Name')
+plt.ylabel('Percentage')
+plt.title('Scatter of Percentages')
+plt.xticks(rotation=90)
+plt.grid(True)
+plt.tight_layout()
+plt.show()
